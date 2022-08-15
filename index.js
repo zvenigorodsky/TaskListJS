@@ -15,7 +15,7 @@ const showAllBtn = menu.children[2];
 const taskBoilerplate = document.getElementsByClassName('taskBoilerplate')[0];
 
 
-const TaskData = JSON.parse(localStorage.tasks) || [];
+let TaskData = JSON.parse(localStorage.tasks) || [];
 
 console.log(TaskData);
 
