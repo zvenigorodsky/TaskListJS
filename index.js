@@ -1,7 +1,5 @@
 
-
 const form = document.getElementsByClassName('addTaskForm')[0];
-const submitFormBtn = form.lastChild;
 
 const focusDiv = document.getElementsByClassName('focusDiv')[0];
 const addTaskBtn = document.getElementById('addTaskBtn');
@@ -17,8 +15,18 @@ const showAllBtn = menu.children[2];
 const taskBoilerplate = document.getElementsByClassName('taskBoilerplate')[0];
 
 
-let TaskData = [];
+const TaskData = JSON.parse(localStorage.tasks) || [];
 
+console.log(TaskData);
+
+if(TaskData.length != 0) showTasks(TaskData);
+
+
+
+
+function updateLocal(tasks){
+    localStorage.setItem('tasks',JSON.stringify(tasks));
+}
 function showMenu(){
     menu.style.top = '-10px';
     hideBtn.style.display = 'block';
@@ -29,10 +37,10 @@ function hideMenu(){
     hideBtn.style.display = 'none'
 }
 
-const clearTasksDiv = () => {
+function clearTasksDiv(){
     while(tasks.firstChild)tasks.removeChild(tasks.firstChild);
 }
-const showTasks = (taskArr) => {
+function showTasks(taskArr){
     clearTasksDiv();
     taskArr.map(task => {
         const taskDiv = taskBoilerplate.cloneNode(true);
@@ -50,7 +58,7 @@ const showTasks = (taskArr) => {
         
         tasks.append(taskDiv);      
         return;
-    })
+    });
 }
 
 const deleteTask = (e) => {
@@ -59,7 +67,8 @@ const deleteTask = (e) => {
 
     let index = TaskData.findIndex(task => task.Id == taskId.innerHTML);
     TaskData.splice(index,1);
-    
+
+    updateLocal(TaskData);
     showTasks(TaskData);
 }
 
@@ -91,6 +100,7 @@ form.addEventListener('submit', (e) => {
     focusDiv.style.display = 'none';
 
     showTasks(TaskData);
+    updateLocal(TaskData);
 });
 
 const toggleComplete = (e) => {
@@ -104,6 +114,8 @@ const toggleComplete = (e) => {
     checked ?
         TaskData[index].complete = true
         : TaskData[index].complete = false;
+
+    updateLocal(TaskData);
 }
 
 hideCompleteBtn.onclick = function(e){
@@ -115,7 +127,10 @@ hideCompleteBtn.onclick = function(e){
 deleteCompleteBtn.onclick = function(e){
     TaskData = TaskData.filter(task => !task.complete)
     showTasks(TaskData)
+    updateLocal(TaskData);
 }
 showAllBtn.onclick = function(e){
     showTasks(TaskData);
 }
+
+
