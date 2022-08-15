@@ -147,3 +147,31 @@ text-decoration: underline ;
     z-index: 3;
     cursor:pointer;
 }
+.sortByName{
+    position:absolute;
+    height:25px;
+    width:150px;
+    background:lightgrey;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 150%;
+    font-weight: 450;  
+    margin:0 0 0 175px;
+    left:0;
+    right:0;
+    cursor: pointer;
+}
+.sortByDate{
+    position:absolute;
+    height:25px;
+    width:150px;
+    background:lightgrey;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 150%;
+    font-weight: 450; 
+    margin:30px 0 0 175px;
+    left:0;
+    right:0;
+    cursor: pointer;
+}

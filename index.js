@@ -11,6 +11,8 @@ let menu = document.getElementsByClassName('menu')[0];
 const hideCompleteBtn = menu.children[0];
 const deleteCompleteBtn = menu.children[1];
 const showAllBtn = menu.children[2];
+const sortNameBtn = document.getElementsByClassName('sortByName')[0];
+const sortDateBtn = document.getElementsByClassName('sortByDate')[0];
 
 const taskBoilerplate = document.getElementsByClassName('taskBoilerplate')[0];
 
@@ -19,10 +21,10 @@ if(!localStorage.tasks){
 }
 let TaskData = (JSON.parse(localStorage.tasks)) || [];
 
-
-console.log(TaskData);
-
-if(TaskData.length != 0) showTasks(TaskData);
+if(TaskData.length != 0){
+    showTasks(TaskData);
+    showSortBtns();
+} 
 
 
 
@@ -60,6 +62,7 @@ function showTasks(taskArr){
         taskDiv.style.display = 'flex';
         
         tasks.append(taskDiv);      
+        showSortBtns();
         return;
     });
 }
@@ -73,6 +76,7 @@ const deleteTask = (e) => {
 
     updateLocal(TaskData);
     showTasks(TaskData);
+    if(tasks.children.length == 0) hideSortBtns();
 }
 
 const randomNum = () => Math.floor(Math.random()*10000)
@@ -97,6 +101,7 @@ form.addEventListener('submit', (e) => {
         'Task': taskTitle,
         'Description':taskDesc,
         'complete':false,
+        'date':Date.now(),
     });
 
     form.style.display = 'none';
@@ -104,6 +109,7 @@ form.addEventListener('submit', (e) => {
 
     showTasks(TaskData);
     updateLocal(TaskData);
+    showSortBtns();
 });
 
 const toggleComplete = (e) => {
@@ -125,15 +131,46 @@ hideCompleteBtn.onclick = function(e){
     let dataCopy = TaskData.slice();
     dataCopy = dataCopy.filter(task => !task.complete);
     showTasks(dataCopy);
+    if(tasks.children.length == 0) hideSortBtns();
 }
 
 deleteCompleteBtn.onclick = function(e){
     TaskData = TaskData.filter(task => !task.complete)
     showTasks(TaskData)
     updateLocal(TaskData);
+    if(tasks.children.length == 0) hideSortBtns();
 }
 showAllBtn.onclick = function(e){
     showTasks(TaskData);
+    if(tasks.children.length == 0) return hideSortBtns();
+    showSortBtns();
 }
 
+function showSortBtns(){
+        sortNameBtn.style.display = 'block';
+        sortDateBtn.style.display = 'block';
+}
+function hideSortBtns(){
+    sortNameBtn.style.display = 'none';
+    sortDateBtn.style.display = 'none';
+}
 
+sortNameBtn.onclick = function(e){
+    TaskData.sort((a, b) => {
+        let at = a.Task.toLowerCase();
+        let bt = b.Task.toLowerCase();
+        
+        if(at < bt) return -1;
+        if(at > bt) return 1;
+        return 0;
+    });
+    showTasks(TaskData);
+    updateLocal(TaskData);
+}
+sortDateBtn.onclick= function(e){
+    TaskData.sort((a, b) => {
+        return a.date - b.date;
+    });
+    showTasks(TaskData);
+    updateLocal(TaskData);
+}
